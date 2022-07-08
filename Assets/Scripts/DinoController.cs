@@ -9,30 +9,42 @@ public class DinoController : MonoBehaviour {
     public GameObject grid;
     public GameObject groundTilemap;
     public float jumpSpeed;
+    private bool didJump = false;
     private bool isGrounded = false;
     public float speedX = 1;
 
     void Start() {
-        // foreach (Transform gridItem in grid.transform) {
-        //     gridItem.GetComponent<Rigidbody2D>().velocity = Vector2.left * speedX;
-        // }
-        // grid.GetComponent<Rigidbody2D>().velocity = Vector2.left * speedX;
-        // body.velocity = new Vector2(0, body.velocity.y);
-        // Debug.Log(grid.GetComponent<Rigidbody2D>().velocity);
     }
 
     void Update() {
-        body.velocity = new Vector2(0, body.velocity.y);
-        Tilemap tilemap = groundTilemap.GetComponent<Tilemap>();
+        MoveGround();
+        HandleInputs();
+    }
+
+    void HandleInputs() {
+        if (Input.GetButtonDown("Fire1")) {
+            speedX = speedX % 5 + 1;
+        }
         if (Input.GetAxis("Horizontal") > 0) {
             Debug.Log(body.velocity);
         }
-        if (IsInputJump() && isGrounded) {
-            body.velocity = Vector2.right;
-            // body.velocity = new Vector2(body.velocity.x, jumpSpeed);
+        if (CanJump()) {
+            body.velocity += Vector2.up * jumpSpeed;
+            didJump = true;
         }
     }
 
+    void MoveGround() {
+        Tilemap tilemap = groundTilemap.GetComponent<Tilemap>();
+        tilemap.tileAnchor += Vector3.left * speedX * Time.deltaTime;
+        if (tilemap.tileAnchor.x < 0) {
+            tilemap.tileAnchor += Vector3.right;
+        }
+    }
+
+    bool CanJump() {
+        return IsInputJump() && isGrounded && !didJump;
+    }
     bool IsInputJump() {
         return Input.GetAxis("Vertical") > Mathf.Epsilon ||
         Input.GetButtonDown("Jump");
@@ -42,6 +54,7 @@ public class DinoController : MonoBehaviour {
         if (collision.gameObject.tag == "Ground") {
             isGrounded = true;
             animator.SetBool("IsGrounded", true);
+            didJump = false;
         }
     }
 
