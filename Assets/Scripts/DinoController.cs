@@ -13,7 +13,10 @@ public class DinoController : MonoBehaviour {
     private bool isGrounded = false;
     public float speedX = 1;
 
+    public GameObject tree;
+
     void Start() {
+        tree.GetComponent<Rigidbody2D>().velocity = Vector2.left * speedX;
     }
 
     void Update() {
