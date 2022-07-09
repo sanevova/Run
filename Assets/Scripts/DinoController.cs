@@ -5,6 +5,9 @@ using UnityEngine.Tilemaps;
 using TMPro;
 
 public class DinoController : MonoBehaviour {
+    const float TREE_SPAWN_INTERVAL_MIN = 0.8F;
+    const float TREE_SPAWN_INTERVAL_MAX = 1.6F;
+
     public Rigidbody2D body;
     public Animator animator;
     public GameObject grid;
@@ -20,6 +23,8 @@ public class DinoController : MonoBehaviour {
     public TMP_Text deathText;
     public TMP_Text scoreText;
     private int score = 0;
+    private float lastTreeSpawnTime = 0;
+    private float nextTreeSpawnTime = 0;
 
     void Start() {
         tree.SetActive(false);
@@ -28,6 +33,7 @@ public class DinoController : MonoBehaviour {
 
     void Update() {
         MoveGround();
+        SpawnTrees();
         HandleInputs();
         if (didJump) {
             ApplyStickyJumpGravity();
@@ -36,11 +42,6 @@ public class DinoController : MonoBehaviour {
     }
 
     void HandleInputs() {
-        if (Input.GetButtonDown("Fire1")) {
-            GameObject newTree = Instantiate(tree, tree.transform.position + Vector3.left, tree.transform.rotation);
-            newTree.SetActive(true);
-            newTree.GetComponent<Rigidbody2D>().velocity = Vector2.left * speedX;
-        }
         if (Input.GetButtonDown("Fire2")) {
             // pause/unpause
             Time.timeScale = 1 - Time.timeScale;
@@ -82,6 +83,22 @@ public class DinoController : MonoBehaviour {
             body.gravityScale = stickyJumpGravity;
             didIncreaseJumpGravity = true;
         }
+    }
+
+    void SpawnTrees() {
+        if (nextTreeSpawnTime > Time.time) {
+            return;
+        }
+        SpawnTree();
+        lastTreeSpawnTime = Time.time;
+        float interval = Random.Range(TREE_SPAWN_INTERVAL_MIN, TREE_SPAWN_INTERVAL_MAX);
+        nextTreeSpawnTime = lastTreeSpawnTime + interval;
+    }
+
+    void SpawnTree() {
+        GameObject newTree = Instantiate(tree, tree.transform.position + Vector3.left, tree.transform.rotation);
+        newTree.SetActive(true);
+        newTree.GetComponent<Rigidbody2D>().velocity = Vector2.left * speedX;
     }
 
     void OnCollisionEnter2D(Collision2D collision) {
