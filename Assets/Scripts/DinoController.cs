@@ -45,6 +45,7 @@ public class DinoController : MonoBehaviour {
             // pause/unpause
             Time.timeScale = 1 - Time.timeScale;
             deathText.enabled = !deathText.enabled;
+            GetComponent<SpriteRenderer>().color = Color.white;
         }
         if (Input.GetAxis("Horizontal") > 0) {
             Debug.Log(body.velocity);
@@ -99,6 +100,8 @@ public class DinoController : MonoBehaviour {
             Debug.Log("HIT TREE");
             deathText.enabled = true;
             Time.timeScale = 0;
+            GetComponent<SpriteRenderer>().color = Color.red;
+            other.GetComponent<SpriteRenderer>().color = Color.grey;
         }
     }
 
