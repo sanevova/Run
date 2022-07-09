@@ -10,6 +10,9 @@ public class DinoController : MonoBehaviour {
     public GameObject groundTilemap;
     public float jumpSpeed;
     private bool didJump = false;
+    private bool didIncreaseJumpGravity = false;
+    private float defaultGravity;
+    public float stickyJumpGravity = 1.2f;
     private bool isGrounded = false;
     public float speedX = 1;
 
@@ -17,11 +20,15 @@ public class DinoController : MonoBehaviour {
 
     void Start() {
         tree.SetActive(false);
+        defaultGravity = body.gravityScale;
     }
 
     void Update() {
         MoveGround();
         HandleInputs();
+        if (didJump) {
+            ApplyStickyJumpGravity();
+        }
     }
 
     void HandleInputs() {
@@ -33,9 +40,8 @@ public class DinoController : MonoBehaviour {
         if (Input.GetAxis("Horizontal") > 0) {
             Debug.Log(body.velocity);
         }
-        if (CanJump()) {
-            body.velocity += Vector2.up * jumpSpeed;
-            didJump = true;
+        if (IsInputJump() && CanJump()) {
+            Jump();
         }
     }
 
@@ -48,11 +54,24 @@ public class DinoController : MonoBehaviour {
     }
 
     bool CanJump() {
-        return IsInputJump() && isGrounded && !didJump;
+        return isGrounded && !didJump;
     }
+
     bool IsInputJump() {
         return Input.GetAxis("Vertical") > Mathf.Epsilon ||
         Input.GetButtonDown("Jump");
+    }
+
+    void Jump() {
+        body.velocity += Vector2.up * jumpSpeed;
+        didJump = true;
+    }
+
+    void ApplyStickyJumpGravity() {
+        if (body.velocity.y < 0 && !didIncreaseJumpGravity) {
+            body.gravityScale = stickyJumpGravity;
+            didIncreaseJumpGravity = true;
+        }
     }
 
     void OnCollisionEnter2D(Collision2D collision) {
@@ -60,6 +79,9 @@ public class DinoController : MonoBehaviour {
             isGrounded = true;
             animator.SetBool("IsGrounded", true);
             didJump = false;
+            // reset sticky jump gravity
+            body.gravityScale = defaultGravity;
+            didIncreaseJumpGravity = false;
         }
     }
 
