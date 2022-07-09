@@ -16,7 +16,7 @@ public class DinoController : MonoBehaviour {
     public GameObject tree;
 
     void Start() {
-        tree.GetComponent<Rigidbody2D>().velocity = Vector2.left * speedX;
+        tree.SetActive(false);
     }
 
     void Update() {
@@ -26,7 +26,9 @@ public class DinoController : MonoBehaviour {
 
     void HandleInputs() {
         if (Input.GetButtonDown("Fire1")) {
-            speedX = speedX % 5 + 1;
+            GameObject newTree = Instantiate(tree, tree.transform.position + Vector3.left, tree.transform.rotation);
+            newTree.SetActive(true);
+            newTree.GetComponent<Rigidbody2D>().velocity = Vector2.left * speedX;
         }
         if (Input.GetAxis("Horizontal") > 0) {
             Debug.Log(body.velocity);
