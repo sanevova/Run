@@ -72,6 +72,13 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 
+
+# TextMesh Pro files
+[Aa]ssets/TextMesh*Pro/
+[Aa]ssets/TextMesh*Pro*
+
+
+
 # VS Code
 .vscode/*
 .vscode/settings.json
@@ -83,3 +90,4 @@ crashlytics-build.properties
 
 # Local History for Visual Studio Code
 .history/
+

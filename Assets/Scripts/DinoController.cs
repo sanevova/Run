@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using TMPro;
 
 public class DinoController : MonoBehaviour {
     public Rigidbody2D body;
@@ -15,8 +16,10 @@ public class DinoController : MonoBehaviour {
     public float stickyJumpGravity = 1.2f;
     private bool isGrounded = false;
     public float speedX = 1;
-
     public GameObject tree;
+    public TMP_Text deathText;
+    public TMP_Text scoreText;
+    private int score = 0;
 
     void Start() {
         tree.SetActive(false);
@@ -29,6 +32,7 @@ public class DinoController : MonoBehaviour {
         if (didJump) {
             ApplyStickyJumpGravity();
         }
+        UpdateScore();
     }
 
     void HandleInputs() {
@@ -36,6 +40,11 @@ public class DinoController : MonoBehaviour {
             GameObject newTree = Instantiate(tree, tree.transform.position + Vector3.left, tree.transform.rotation);
             newTree.SetActive(true);
             newTree.GetComponent<Rigidbody2D>().velocity = Vector2.left * speedX;
+        }
+        if (Input.GetButtonDown("Fire2")) {
+            // pause/unpause
+            Time.timeScale = 1 - Time.timeScale;
+            deathText.enabled = !deathText.enabled;
         }
         if (Input.GetAxis("Horizontal") > 0) {
             Debug.Log(body.velocity);
@@ -85,10 +94,23 @@ public class DinoController : MonoBehaviour {
         }
     }
 
+    void OnTriggerEnter2D(Collider2D other) {
+        if (other.gameObject.tag == "Target") {
+            Debug.Log("HIT TREE");
+            deathText.enabled = true;
+            Time.timeScale = 0;
+        }
+    }
+
     void OnCollisionExit2D(Collision2D collision) {
         if (collision.gameObject.tag == "Ground") {
             isGrounded = false;
             animator.SetBool("IsGrounded", false);
         }
+    }
+
+    void UpdateScore() {
+        score = (int)Mathf.Floor(Time.time * speedX);
+        scoreText.text = score.ToString();
     }
 }
