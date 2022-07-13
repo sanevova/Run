@@ -7,6 +7,7 @@ using TMPro;
 public class DinoController : MonoBehaviour {
     const float TREE_SPAWN_INTERVAL_MIN = 0.8F;
     const float TREE_SPAWN_INTERVAL_MAX = 1.6F;
+    const int SPEED_INCREASE_INTERVAL_GROWTH = 50;
 
     public Rigidbody2D body;
     public Animator animator;
@@ -18,11 +19,14 @@ public class DinoController : MonoBehaviour {
     private float defaultGravity;
     public float stickyJumpGravity = 1.2f;
     private bool isGrounded = false;
-    public float speedX = 1;
+    public float speedX = 10;
     public GameObject tree;
     public TMP_Text deathText;
     public TMP_Text scoreText;
-    private int score = 0;
+    private float score = 0;
+    private int nextSpeedIncreaseScore = SPEED_INCREASE_INTERVAL_GROWTH;
+    private int speedIncreaseInterval = SPEED_INCREASE_INTERVAL_GROWTH;
+    public float speedIncreaseFactor = 1.2f;
     private float lastTreeSpawnTime = 0;
     private float nextTreeSpawnTime = 0;
 
@@ -59,8 +63,9 @@ public class DinoController : MonoBehaviour {
     void MoveGround() {
         Tilemap tilemap = groundTilemap.GetComponent<Tilemap>();
         tilemap.tileAnchor += Vector3.left * speedX * Time.deltaTime;
-        if (tilemap.tileAnchor.x < 0) {
-            tilemap.tileAnchor += Vector3.right;
+        float x = tilemap.tileAnchor.x;
+        if (x < 0) {
+            tilemap.tileAnchor += Vector3.right * Mathf.Floor(Mathf.Abs(x) + 1);
         }
     }
 
@@ -130,7 +135,16 @@ public class DinoController : MonoBehaviour {
     }
 
     void UpdateScore() {
-        score = (int)Mathf.Floor(Time.time * speedX);
-        scoreText.text = score.ToString();
+        score += Time.deltaTime * speedX;
+        int displayScore = (int)Mathf.Floor(score);
+        if (displayScore > nextSpeedIncreaseScore) {
+            speedX *= speedIncreaseFactor;
+            foreach (GameObject tree in GameObject.FindGameObjectsWithTag("Target")) {
+                tree.GetComponent<Rigidbody2D>().velocity = Vector2.left * speedX;
+            }
+            nextSpeedIncreaseScore += speedIncreaseInterval;
+            speedIncreaseInterval += SPEED_INCREASE_INTERVAL_GROWTH;
+        }
+        scoreText.text = string.Format("score: {0}\nspeed: {1:0.0}", displayScore.ToString(), speedX);
     }
 }
