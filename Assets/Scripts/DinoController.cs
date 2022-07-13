@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class DinoController : MonoBehaviour {
-    const float TREE_SPAWN_INTERVAL_MIN = 0.8F;
-    const float TREE_SPAWN_INTERVAL_MAX = 1.6F;
-
     public GameController game;
     public Rigidbody2D body;
     public Animator animator;
@@ -16,18 +13,12 @@ public class DinoController : MonoBehaviour {
     private float defaultGravity;
     public float stickyJumpGravity = 1.2f;
     private bool isGrounded = false;
-    public GameObject tree;
-
-    private float lastTreeSpawnTime = 0;
-    private float nextTreeSpawnTime = 0;
 
     void Start() {
-        tree.SetActive(false);
         defaultGravity = body.gravityScale;
     }
 
     void Update() {
-        SpawnTrees();
         HandleInputs();
         if (didJump) {
             ApplyStickyJumpGravity();
@@ -62,22 +53,6 @@ public class DinoController : MonoBehaviour {
             body.gravityScale = stickyJumpGravity;
             didIncreaseJumpGravity = true;
         }
-    }
-
-    void SpawnTrees() {
-        if (nextTreeSpawnTime > Time.time) {
-            return;
-        }
-        SpawnTree();
-        lastTreeSpawnTime = Time.time;
-        float interval = Random.Range(TREE_SPAWN_INTERVAL_MIN, TREE_SPAWN_INTERVAL_MAX);
-        nextTreeSpawnTime = lastTreeSpawnTime + interval;
-    }
-
-    void SpawnTree() {
-        GameObject newTree = Instantiate(tree, tree.transform.position + Vector3.left, tree.transform.rotation);
-        newTree.SetActive(true);
-        newTree.GetComponent<Rigidbody2D>().velocity = Vector2.left * game.speedX;
     }
 
     void OnCollisionEnter2D(Collision2D collision) {

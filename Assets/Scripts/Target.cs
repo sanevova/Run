@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tree : MonoBehaviour {
+public class Target : MonoBehaviour {
     const float OBSTACLE_CLEAR_X = -15f;
 
     void Start() {

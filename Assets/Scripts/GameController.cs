@@ -16,7 +16,6 @@ public class GameController : MonoBehaviour {
     private int nextSpeedIncreaseScore = SPEED_INCREASE_INTERVAL_GROWTH;
     private int speedIncreaseInterval = SPEED_INCREASE_INTERVAL_GROWTH;
     public float speedIncreaseFactor = 1.2f;
-
     void Start() {
         dino = GameObject.FindObjectOfType<DinoController>();
     }
