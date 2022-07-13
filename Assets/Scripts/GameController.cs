@@ -56,8 +56,8 @@ public class GameController : MonoBehaviour {
             return;
         }
         speedX *= speedIncreaseFactor;
-        foreach (GameObject target in GameObject.FindGameObjectsWithTag("Target")) {
-            target.GetComponent<Rigidbody2D>().velocity = Vector2.left * speedX;
+        foreach (Target target in GameObject.FindObjectsOfType<Target>()) {
+            target.DidUpdateGameSpeed(speedX);
         }
         nextSpeedIncreaseScore += speedIncreaseInterval;
         speedIncreaseInterval += SPEED_INCREASE_INTERVAL_GROWTH;

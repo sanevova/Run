@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour {
     GameController game;
-    public GameObject tree;
-    public GameObject fireball;
+    public Target tree;
+    public Target fireball;
     public float spawnTreeProbability;
 
     const float SPAWN_INTERVAL_MIN = 0.8F;
@@ -16,8 +16,8 @@ public class Spawner : MonoBehaviour {
 
     void Start() {
         game = GameObject.FindObjectOfType<GameController>();
-        tree.SetActive(false);
-        fireball.SetActive(false);
+        tree.gameObject.SetActive(false);
+        fireball.gameObject.SetActive(false);
     }
 
     void Update() {
@@ -50,9 +50,10 @@ public class Spawner : MonoBehaviour {
         SpawnEnemyFromPrototype(tree);
     }
 
-    void SpawnEnemyFromPrototype(GameObject prototype) {
-        GameObject enemy = Instantiate(prototype, prototype.transform.position, tree.transform.rotation);
-        enemy.SetActive(true);
+    void SpawnEnemyFromPrototype(Target prototype) {
+        Target enemy = Instantiate(prototype, prototype.transform.position, tree.transform.rotation);
+        enemy.gameObject.SetActive(true);
         enemy.GetComponent<Rigidbody2D>().velocity = Vector2.left * game.speedX;
+        enemy.DidSpawn();
     }
 }
