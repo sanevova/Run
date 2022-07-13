@@ -371,6 +371,7 @@ GameObject:
   - component: {fileID: 519420032}
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
+  - component: {fileID: 519420033}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -444,6 +445,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &519420033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4be171a2f2632c14daec9221f2851b0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speedX: 10
+  groundTilemap: {fileID: 2118821837}
+  deathText: {fileID: 1454963033}
+  scoreText: {fileID: 117840842}
+  speedIncreaseFactor: 1.2
 --- !u!1 &728656657
 GameObject:
   m_ObjectHideFlags: 0
@@ -731,17 +749,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 816c4c08691de614fabae547f7465a28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  game: {fileID: 519420033}
   body: {fileID: 768937010}
   animator: {fileID: 768937008}
   grid: {fileID: 728656657}
-  groundTilemap: {fileID: 2118821837}
   jumpSpeed: 16
   stickyJumpGravity: 6
-  speedX: 10
   tree: {fileID: 1071897829}
-  deathText: {fileID: 1454963033}
-  scoreText: {fileID: 117840842}
-  speedIncreaseValue: 2
 --- !u!1 &1071897829
 GameObject:
   m_ObjectHideFlags: 0
