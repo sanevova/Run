@@ -53,6 +53,9 @@ TagManager:
   - name: Foreground
     uniqueID: 1561240621
     locked: 0
+  - name: Slime
+    uniqueID: 1016667183
+    locked: 0
   - name: Player
     uniqueID: 2763161513
     locked: 0
