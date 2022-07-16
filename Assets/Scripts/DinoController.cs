@@ -10,6 +10,7 @@ public class DinoController : MonoBehaviour {
     public float jumpSpeed;
     private bool didJump = false;
     private bool didIncreaseJumpGravity = false;
+    private bool didDoubleJump = false;
     private float defaultGravity;
     public float stickyJumpGravity = 1.2f;
     private bool isGrounded = false;
@@ -29,8 +30,16 @@ public class DinoController : MonoBehaviour {
         if (Input.GetAxis("Horizontal") > 0) {
             Debug.Log(body.velocity);
         }
-        if (IsInputJump() && CanJump()) {
+        if (!IsInputJump()) {
+            return;
+        }
+        // input is jump
+        if (CanJump()) {
             Jump();
+            return;
+        }
+        if (CanDoubleJump()) {
+            DoubleJump();
         }
     }
 
@@ -38,14 +47,25 @@ public class DinoController : MonoBehaviour {
         return isGrounded && !didJump;
     }
 
+    bool CanDoubleJump() {
+        return !isGrounded && didJump && !didDoubleJump;
+    }
+
     bool IsInputJump() {
-        return Input.GetAxis("Vertical") > Mathf.Epsilon ||
-        Input.GetButtonDown("Jump");
+        return Input.GetAxis("Vertical") > Mathf.Epsilon
+            || Input.GetButtonDown("Jump")
+            || Input.GetButtonDown("Fire1");
     }
 
     void Jump() {
         body.velocity += Vector2.up * jumpSpeed;
         didJump = true;
+    }
+
+    void DoubleJump() {
+        body.velocity = Vector2.up * jumpSpeed * 0.85f;
+        didDoubleJump = true;
+        animator.SetBool("DidDoubleJump", true);
     }
 
     void ApplyStickyJumpGravity() {
@@ -58,8 +78,10 @@ public class DinoController : MonoBehaviour {
     void OnCollisionEnter2D(Collision2D collision) {
         if (collision.gameObject.tag == "Ground") {
             isGrounded = true;
-            animator.SetBool("IsGrounded", true);
             didJump = false;
+            didDoubleJump = false;
+            animator.SetBool("IsGrounded", true);
+            animator.SetBool("DidDoubleJump", false);
             // reset sticky jump gravity
             body.gravityScale = defaultGravity;
             didIncreaseJumpGravity = false;
