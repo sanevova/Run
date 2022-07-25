@@ -12,12 +12,19 @@ public class GameController : MonoBehaviour {
     public GameObject groundTilemap;
     public TMP_Text deathText;
     public TMP_Text scoreText;
+    public TMP_Text highScoreText;
+    public float speedIncreaseFactor = 1.1f;
     private float score = 0;
+    private float highScore = 0;
     private int nextSpeedIncreaseScore = SPEED_INCREASE_INTERVAL_GROWTH;
     private int speedIncreaseInterval = SPEED_INCREASE_INTERVAL_GROWTH;
-    public float speedIncreaseFactor = 1.1f;
+    private float startSpeedX;
+
     void Start() {
         dino = GameObject.FindObjectOfType<DinoController>();
+        startSpeedX = speedX;
+        ShowHighscore();
+
     }
 
     void Update() {
@@ -28,11 +35,13 @@ public class GameController : MonoBehaviour {
     }
 
     void ProcessInputs() {
-        if (Input.GetButtonDown("Fire2")) {
+        if (dino.isDead &&  Input.anyKey) {
             // pause/unpause
             Time.timeScale = 1 - Time.timeScale;
-            deathText.enabled = !deathText.enabled;
-            dino.GetComponent<SpriteRenderer>().color = Color.white;
+            if (dino.isDead) {
+                RestartGame();
+            }
+            deathText.enabled = dino.isDead;
         }
     }
 
@@ -47,8 +56,31 @@ public class GameController : MonoBehaviour {
 
     void UpdateScore() {
         score += Time.deltaTime * speedX;
-        int displayScore = (int)Mathf.Floor(score);
-        scoreText.text = string.Format("score: {0}\nspeed: {1:0.0}", displayScore.ToString(), speedX);
+        scoreText.text = string.Format("speed: {0:0.0}\nscore: {1,5:0}", speedX, score);
+    }
+
+    public void OnHit() {
+        dino.isDead = true;
+        deathText.enabled = true;
+    }
+
+    void RestartGame() {
+        Debug.Log("restart");
+        if (score > highScore) {
+            highScore = score;
+            ShowHighscore();
+        }
+        foreach (Target target in GameObject.FindObjectsOfType<Target>()) {
+            Destroy(target.gameObject);
+        }
+        dino.GetComponent<SpriteRenderer>().color = Color.white;
+        dino.isDead = false;
+        speedX = startSpeedX;
+        score = 0;
+    }
+
+    void ShowHighscore() {
+        highScoreText.text = string.Format("highscore: {0,5:0}", highScore);
     }
 
     void UpdateSpeed() {

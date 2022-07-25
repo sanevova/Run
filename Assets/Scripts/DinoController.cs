@@ -15,6 +15,7 @@ public class DinoController : MonoBehaviour {
     private float defaultGravity;
     public float stickyJumpGravity = 1.2f;
     private bool isGrounded = false;
+    public bool isDead = false;
 
     void Start() {
         defaultGravity = body.gravityScale;
@@ -95,7 +96,7 @@ public class DinoController : MonoBehaviour {
     void OnTriggerEnter2D(Collider2D other) {
         if (other.gameObject.tag == "Target") {
             Debug.Log("HIT TREE");
-            game.deathText.enabled = true;
+            game.OnHit();
             Time.timeScale = 0;
             GetComponent<SpriteRenderer>().color = Color.red;
             other.GetComponent<SpriteRenderer>().color = Color.grey;
