@@ -7,6 +7,7 @@ public class DinoController : MonoBehaviour {
     public Rigidbody2D body;
     public Animator animator;
     public GameObject grid;
+    public ParticleSystem dust;
     public float jumpSpeed;
     private bool didJump = false;
     private bool didIncreaseJumpGravity = false;
@@ -75,8 +76,10 @@ public class DinoController : MonoBehaviour {
         }
     }
 
+
     void OnCollisionEnter2D(Collision2D collision) {
         if (collision.gameObject.tag == "Ground") {
+            dust.Play();
             isGrounded = true;
             didJump = false;
             didDoubleJump = false;
