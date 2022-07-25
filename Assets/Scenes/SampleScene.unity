@@ -5274,7 +5274,7 @@ MonoBehaviour:
   groundTilemap: {fileID: 2118821837}
   deathText: {fileID: 1454963033}
   scoreText: {fileID: 117840842}
-  speedIncreaseFactor: 1.2
+  speedIncreaseFactor: 1.1
 --- !u!114 &519420034
 MonoBehaviour:
   m_ObjectHideFlags: 0

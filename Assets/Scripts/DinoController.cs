@@ -53,7 +53,8 @@ public class DinoController : MonoBehaviour {
     }
 
     bool IsInputJump() {
-        return Input.GetAxis("Vertical") > Mathf.Epsilon
+        return Input.GetKeyDown(KeyCode.UpArrow)
+            || Input.GetKeyDown(KeyCode.W)
             || Input.GetButtonDown("Jump")
             || Input.GetButtonDown("Fire1");
     }

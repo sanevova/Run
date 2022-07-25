@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 using TMPro;
 
 public class GameController : MonoBehaviour {
-    const int SPEED_INCREASE_INTERVAL_GROWTH = 50;
+    const int SPEED_INCREASE_INTERVAL_GROWTH = 100;
 
     DinoController dino;
     public float speedX = 10;
@@ -15,7 +15,7 @@ public class GameController : MonoBehaviour {
     private float score = 0;
     private int nextSpeedIncreaseScore = SPEED_INCREASE_INTERVAL_GROWTH;
     private int speedIncreaseInterval = SPEED_INCREASE_INTERVAL_GROWTH;
-    public float speedIncreaseFactor = 1.2f;
+    public float speedIncreaseFactor = 1.1f;
     void Start() {
         dino = GameObject.FindObjectOfType<DinoController>();
     }
